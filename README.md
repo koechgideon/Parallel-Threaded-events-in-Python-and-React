@@ -1,4 +1,4 @@
-# Event_tracker_system
+# Parallel-Threaded-events-in-Python-and-React
 
 ## Running
 ### Tools
@@ -188,4 +188,4 @@ After enabling dyno metadata and setting the environment variables, your next He
 
 
 
-# Parallel-Threaded-events-in-Python-and-React
+
