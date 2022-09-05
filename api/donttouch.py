@@ -2,8 +2,8 @@ import threading
 import random
 from rest_framework.response import Response
 from rest_framework .decorators import api_view
-from .serializers import ApiStartSerializer, ApiStopSerializer, ApiReportSerializer
-from .models import ApiStart, ApiStop, ApiReport
+from .serializers import ApiSerializer #ApiStartSerializer, ApiStopSerializer, ApiReportSerializer
+from .models import Api, ApiStart, ApiStop, ApiReport
 import datetime
 
 
@@ -20,22 +20,28 @@ def _start():
     if time:
         time=ApiStart.objects.values_list('program_time').order_by('-id')[0]
         recorded_time=(time[0])
-        prog_time= recorded_time + 3
+        prog_time= recorded_time + 30
         def convert(prog_time):
             return str(datetime.timedelta(seconds = prog_time))
         p_time=convert(prog_time)
         print("{} - start {} servers".format(p_time, num1))
         event=ApiStart(_start=num1, program_time=prog_time)
         event.save() #save to db
+        start='start' + ' ' + str(num1) + ' ' + 'servers'
+        api=Api(_start=start,program_time=p_time)
+        api.save() #save to db
     else:
         prog_time= 43200
-        prog_time= prog_time + 3
+        prog_time= prog_time + 30
         def convert(prog_time):
             return str(datetime.timedelta(seconds = prog_time))
         p_time=convert(prog_time)
         print("{} - start {} servers".format(p_time, num1))
         event=ApiStart(_start=num1, program_time=prog_time)
         event.save() #save to db
+        start='start'+ ' ' + str(num1) + ' ' + 'servers'
+        api=Api(_start=start,program_time=p_time)
+        api.save()
     
     
 t = threading.Timer(3.0, _start)
@@ -52,22 +58,29 @@ def _stop():
     if time:
         time=ApiStop.objects.values_list('program_time').order_by('-id')[0]
         recorded_time=(time[0])
-        prog_time= recorded_time + 4
+        prog_time= recorded_time + 40
         def convert(prog_time):
             return str(datetime.timedelta(seconds = prog_time))
         p_time=convert(prog_time)
         print("{} - stop {} servers".format(p_time, num1))
-        event=ApiStop(_stop=num1, program_time=prog_time)
+        event=ApiStop(_stop=k, program_time=prog_time)
         event.save()
+        stop='stop' + ' ' + str(n)  + ' ' + 'servers'
+        api=Api(_stop=stop,program_time=p_time)
+        api.save()
     else:
         prog_time= 43200
-        prog_time= prog_time + 4
+        prog_time= prog_time + 40
         def convert(prog_time):
             return str(datetime.timedelta(seconds = prog_time))
         p_time=convert(prog_time)
         print("{} - stop {} servers".format(p_time, num1))
-        event=ApiStop(_stop=num1, program_time=prog_time)
+        event=ApiStop(_stop=n, program_time=prog_time)
         event.save() #save to db
+        stop='stop' + ' ' + str(n)  + ' ' + 'servers'
+        api=Api(_stop=stop,program_time=p_time)
+        api.save()
+
     
 
 t = threading.Timer(4.0, _stop)
@@ -82,22 +95,27 @@ def _report():
     if time:
         time=ApiReport.objects.values_list('program_time').order_by('-id')[0]
         recorded_time=(time[0])
-        prog_time= recorded_time + 5
+        prog_time= recorded_time + 50
         def convert(prog_time):
             return str(datetime.timedelta(seconds = prog_time))
         p_time=convert(prog_time)
         print("{} - reported {} servers".format(p_time, num1))
-        event=ApiReport(_report=num1, program_time=prog_time)
+        event=ApiReport(_report=k, program_time=prog_time)
         event.save()
+        report='report' + ' ' + str(k)  + ' ' + 'servers running'
+        api=Api(_report=report,program_time=p_time)
+        api.save()
     else:
         prog_time= 43200
-        prog_time= prog_time + 5
+        prog_time= prog_time + 50
         def convert(prog_time):
             return str(datetime.timedelta(seconds = prog_time))
         p_time=convert(prog_time)
-        print("{} - report {} servers".format(p_time, num1))
-        event=ApiReport(_report=num1, program_time=prog_time)
-        event.save() #save to db      
+        print("{} - report {} servers running".format(p_time, num1))
+        event=ApiReport(_report=k, program_time=prog_time)
+        event.save() #save to db  
+        report='report' + ' ' + str(k)  + ' ' + 'servers running'
+        api=Api(_report=report,program_time=p_time)  
  
 
 t = threading.Timer(5.0, _report)
@@ -108,14 +126,18 @@ t.start()
 
 @api_view(['GET'])
 def display(request):
-    strt=ApiStart.objects.values('actual_time','_start', 'program_time')
-    stp=ApiStop.objects.values('actual_time','_stop', 'program_time')
-    rpt=ApiReport.objects.values('actual_time','_report', 'program_time')
-    strt_obj=ApiStartSerializer(strt, many=True)
-    stp_obj=ApiStopSerializer(stp, many=True)
-    rpt_obj=ApiReportSerializer(rpt, many=True)
-    display=strt_obj.data + stp_obj.data + rpt_obj.data
-    return Response(display)    
+    api=Api.objects.all().order_by('-id')[:1]
+    serializer=ApiSerializer(api, many=True )
+    return Response(serializer.data) 
+    
+ 
+
+
+@api_view(['GET'])
+def ReportBtn(request):
+    api=Api.objects.all()
+    serializer=ApiSerializer(api, many=True )
+    return Response(serializer.data) 
 
 
 

@@ -12,7 +12,7 @@ global k
 k=0
 def _start():
     global k, num1
-    t = threading.Timer(3.0, _start)
+    t = threading.Timer(30.0, _start)
     t.start() 
     num1 = random.randint(10, 20) #servers started
     k=k+num1
@@ -44,13 +44,13 @@ def _start():
         api.save()
     
     
-t = threading.Timer(3.0, _start)
+t = threading.Timer(30.0, _start)
 t.start() 
 
 
 def _stop():
     global k, n
-    t = threading.Timer(4.0, _stop)
+    t = threading.Timer(40.0, _stop)
     t.start()
     n = random.randint(5, k)
     k = k-n #servers running
@@ -83,13 +83,13 @@ def _stop():
 
     
 
-t = threading.Timer(4.0, _stop)
+t = threading.Timer(40.0, _stop)
 t.start() 
 
 
 def _report():
     global k, prog_time
-    t = threading.Timer(5.0, _report)
+    t = threading.Timer(50.0, _report)
     t.start()
     time=ApiReport.objects.values_list('program_time')
     if time:
@@ -118,7 +118,7 @@ def _report():
         api=Api(_report=report,program_time=p_time)  
  
 
-t = threading.Timer(5.0, _report)
+t = threading.Timer(50.0, _report)
 t.start()
 
 
@@ -132,19 +132,12 @@ def display(request):
     
  
 
-'''
+
 @api_view(['GET'])
-def display(request):
-strt=ApiStart.objects.all().order_by('-id')[:1]
-    stp=ApiStop.objects.all().order_by('-id')[:1]
-    rpt=ApiReport.objects.all().order_by('-id')[:1]
-    strt_obj=ApiStartSerializer(strt, many=True)
-    stp_obj=ApiStopSerializer(stp, many=True)
-    rpt_obj=ApiReportSerializer(rpt, many=True)
-    display=strt_obj.data + stp_obj.data + rpt_obj.data
-    api=Api.objects.all().order_by('-id')[:1]
+def ReportBtn(request):
+    api=Api.objects.all()
     serializer=ApiSerializer(api, many=True )
-    return Response(serializer.data)'''
+    return Response(serializer.data) 
 
 
 

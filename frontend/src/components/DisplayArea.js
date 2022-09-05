@@ -2,14 +2,13 @@ import React, {useState, useEffect} from 'react'
 
 const AppPage = () => {
    const [posts, setPosts] = useState([]);
-   const WAIT_TIME = 500;
+   const WAIT_TIME = 5000;
    useEffect(() => {
       const id = setInterval(() => {
 
                   fetch('http://127.0.0.1:8000/display/')
                      .then((response) => response.json())
                      .then((data) => {
-                        console.log(data);
                         setPosts(data);
                      })
                      .catch((err) => {
