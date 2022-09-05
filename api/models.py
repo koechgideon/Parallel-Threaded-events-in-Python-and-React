@@ -2,8 +2,12 @@ from datetime import datetime
 from django.db import models
 
 
-'''class Api(models.Model):
-    actual_time=models.DateField(default=datetime.now)'''
+class Api(models.Model):
+    actual_time=models.DateTimeField(auto_now_add=True)
+    _start=models.TextField(max_length=200,null=True, blank=True)
+    _stop=models.TextField(max_length=200,null=True, blank=True)
+    _report=models.TextField(max_length=200,null=True, blank=True)
+    program_time=models.CharField(max_length=200, null=False, blank=False)
 
 class ApiStart(models.Model):
     actual_time=models.DateTimeField(auto_now_add=True)

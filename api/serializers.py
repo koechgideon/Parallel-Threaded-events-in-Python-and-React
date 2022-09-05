@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import ApiStart, ApiStop, ApiReport
+from .models import Api #, ApiStart, ApiStop, ApiReport
 
 
-class ApiStartSerializer(serializers.Serializer):
+'''class ApiStartSerializer(serializers.Serializer):
     actual_time=serializers.DateTimeField()
     _start=serializers.IntegerField()
     program_time= serializers.IntegerField()
@@ -24,16 +24,13 @@ class ApiReportSerializer(serializers.Serializer):
     program_time= serializers.IntegerField()
     class Meta:
         model=ApiReport
-        fields=('__all__')
+        fields=('__all__')'''
 
 
-'''class ApiSerializer(serializers.Serializer):
-    strtSerializer=ApiStartSerializer(read_only=True, many=True)
-    stpSerializer=ApiStopSerializer(read_only=True, many=True)
-    rptSerializer=ApiReportSerializer(read_only=True, many=True)
+class ApiSerializer(serializers.ModelSerializer):
     class Meta:
         model=Api
-        fields = ('__all__')'''
+        fields = ('__all__')
 
 
 
